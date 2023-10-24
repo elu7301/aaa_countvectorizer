@@ -1,6 +1,7 @@
 class CountVectorizer:
     """
-    Text vectorizer that converts an iterable object into a matrix of token counts.
+    Text vectorizer that converts
+    an iterable object into a matrix of token counts.
 
     Args:
         lowercase (bool): Convert text to lowercase. Default is True.
@@ -23,7 +24,7 @@ class CountVectorizer:
         self.vector = {}
         self.matrix = []
 
-    def fit_transform(self, docs) -> list:  # docs: iterable object
+    def fit_transform(self, docs: tuple | set | list) -> list:  # docs: iterable object
         """
         Fit the vectorizer on the documents
         and transform the documents into a matrix of token counts.
@@ -34,7 +35,6 @@ class CountVectorizer:
         Returns:
             matrix (list): Matrix of token counts.
         """
-
         if self.lowercase:
             docs = list(map(str.lower, docs))
 
@@ -44,12 +44,12 @@ class CountVectorizer:
             temple.extend(doc.split())
         counter = dict.fromkeys(temple)
 
-        self.vector = {c: v for v, c in enumerate(counter)}
+        self.vector = dict.fromkeys(counter, 0)
         for doc in docs:
-            temp_vector = [0 for _ in range(len(counter))]
+            temp_vector = self.vector.copy()
             for word in doc.split():
-                temp_vector[self.vector[word]] += 1
-            self.matrix.append(temp_vector)
+                temp_vector[word] += 1
+            self.matrix.append(list(temp_vector.values()))
 
         return self.matrix
 
